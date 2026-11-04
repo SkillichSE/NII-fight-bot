@@ -1,0 +1,30 @@
+From a74239e6e823a8d38672f154d399baa53c1299be Mon Sep 17 00:00:00 2001
+From: Ricardo Quesada <ricardoquesada@gmail.com>
+Date: Sun, 20 Sep 2026 10:58:27 -0700
+Subject: [PATCH] [PATCH] l2cap: Allow incoming connection with not-enough GAP
+ privilegies
+
+Allow incoming connections from DualShock 3, even though GAP Security is
+set to two.
+
+Basically this commit ignores the GAP from the incomming connection.
+---
+ src/l2cap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/l2cap.c b/src/l2cap.c
+index f35c499e3..80f14f8fb 100644
+--- a/src/l2cap.c
++++ b/src/l2cap.c
+@@ -2486,7 +2486,7 @@ static void l2cap_handle_remote_supported_features_received(l2cap_channel_t * ch
+ 
+         // incoming: assert security requirements
+         channel->state = L2CAP_STATE_WAIT_INCOMING_SECURITY_LEVEL_UPDATE;
+-        if (security_sufficient){
++        if (security_sufficient || true){
+             l2cap_handle_security_level_incoming_sufficient(channel);
+         } else {
+             // send connection pending if not already done
+-- 
+2.55.0
+
